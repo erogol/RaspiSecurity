@@ -2,11 +2,11 @@
 # python pi_surveillance.py --conf conf.json
 
 # import the necessary packages
-from utils.tempimage import TempImage
 from dropbox.client import DropboxOAuth2FlowNoRedirect
 from dropbox.client import DropboxClient
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from utils import send_email, TempImage
 import argparse
 import warnings
 import datetime
@@ -60,6 +60,7 @@ time.sleep(conf["camera_warmup_time"])
 avg = None
 lastUploaded = datetime.datetime.now()
 motionCounter = 0
+print('[INFO] talking raspi started !!')
 
 # capture frames from the camera
 for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -124,31 +125,42 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 
 	# check to see if the room is occupied
 	if text == "Occupied":
-		# check to see if enough time has passed between uploads
-		if (timestamp - lastUploaded).seconds >= conf["min_upload_seconds"]:
-			# increment the motion counter
-			motionCounter += 1
+                # save occupied frame
+                cv2.imwrite("/tmp/talkingraspi_{}.jpg".format(motionCounter), frame);
 
-			# check to see if the number of frames with consistent motion is
-			# high enough
-			if motionCounter >= conf["min_motion_frames"]:
-				# check to see if dropbox sohuld be used
-				if conf["use_dropbox"]:
-					# write the image to temporary file
-					t = TempImage()
-					cv2.imwrite(t.path, frame)
+                # check to see if enough time has passed between uploads
+                if (timestamp - lastUploaded).seconds >= conf["min_upload_seconds"]:
 
-					# upload the image to Dropbox and cleanup the tempory image
-					print "[UPLOAD] {}".format(ts)
-					path = "{base_path}/{timestamp}.jpg".format(
-						base_path=conf["dropbox_base_path"], timestamp=ts)
-					client.put_file(path, open(t.path, "rb"))
-					t.cleanup()
+                        # increment the motion counter
+                        motionCounter += 1;
 
-				# update the last uploaded timestamp and reset the motion
-				# counter
-				lastUploaded = timestamp
-				motionCounter = 0
+                        # check to see if the number of frames with consistent motion is
+                        # high enough
+                        if motionCounter >= int(conf["min_motion_frames"]):
+                                # check to see if dropbox sohuld be used
+                                if conf["use_dropbox"]:
+                                        # write the image to temporary file
+                                        t = TempImage()
+                                        cv2.imwrite(t.path, frame)
+                                        # upload the image to Dropbox and cleanup the tempory image
+                                        print "[UPLOAD] {}".format(ts)
+                                        path = "{base_path}/{timestamp}.jpg".format(
+                                                base_path=conf["dropbox_base_path"], timestamp=ts)
+                                        client.put_file(path, open(t.path, "rb"))
+                                        t.cleanup()
+
+                                # send an email if enabled
+                                if conf["use_email"]:
+                                        print("[INFO] Sending an alert email!!!")
+                                        send_email(conf)
+                                        print("[INFO] waiting {} seconds...".format(conf["camera_warmup_time"]))
+                                        time.sleep(conf["camera_warmup_time"])
+                                        print("[INFO] running")
+
+                                # update the last uploaded timestamp and reset the motion
+                                # counter
+                                lastUploaded = timestamp
+                                motionCounter = 0
 
 	# otherwise, the room is not occupied
 	else:
