@@ -1,5 +1,5 @@
 {
-	"show_video": true,
+	"show_video": false,
 	"use_dropbox": false,
 	"dropbox_key": "YOUR_DROPBOX_KEY",
 	"dropbox_secret": "YOUR_DROPBOX_SECRET",
@@ -8,7 +8,7 @@
     "email_address": ["erengolge@gmail.com","demiralhazal@gmail.com"],
 	"min_upload_seconds": 0.5,
 	"min_motion_frames": 8,
-	"camera_warmup_time": 5,
+	"camera_warmup_time": 1,
 	"delta_thresh": 5,
 	"blur_size": [21, 21], 
 	"resolution": [640, 480],

@@ -1,4 +1,3 @@
-# USAGE
 # python pi_surveillance.py --conf conf.json
 
 # import the necessary packages

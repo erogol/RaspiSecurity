@@ -1,0 +1,67 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="Talkingraspi interface">
+  <meta name="author" content="Eren Golge">
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $("#start_button").click(function(e){
+          e.preventDefault();
+        $.ajax({type: "POST",
+                url: "/start",
+                data: {},
+                success:function(result){
+          $("#start_button").html(result);
+        }});
+      });
+
+    });
+    
+    $(document).ready(function(){
+      $("#stop_button").click(function(e){
+          e.preventDefault();
+        $.ajax({type: "POST",
+                url: "/stop",
+                data: {},
+                success:function(result){
+          $("#stop_button").html(result);
+        }});
+      });
+
+      (function worker() {
+         $.ajax({
+           url: '/status', 
+           success: function(data) {
+             $('#status_bar').html(data);
+           },
+           complete: function() {
+             // Schedule the next request when the current one's complete
+             setTimeout(worker, 5000);
+           }
+         });
+      })();
+    });
+    </script>
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <script src="js/scripts.js"></script>
+  <h1>Hi! This is Talkingraspi!</h1>
+  <span id="status_bar"></span>
+  </br>
+  </br>
+  <button id="start_button">Start Talkingraspi</button>
+  <button id="stop_button">Stop Talkingraspi</button>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+</body>
+</html>
