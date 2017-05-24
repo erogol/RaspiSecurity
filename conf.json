@@ -8,7 +8,7 @@
     "email_address": ["erengolge@gmail.com","demiralhazal@gmail.com"],
 	"min_upload_seconds": 0.5,
 	"min_motion_frames": 8,
-	"camera_warmup_time": 1,
+	"camera_warmup_time": 10,
 	"delta_thresh": 5,
 	"blur_size": [21, 21], 
 	"resolution": [640, 480],
