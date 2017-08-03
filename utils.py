@@ -50,9 +50,10 @@ def send_email(conf):
                 part['Content-Disposition'] = 'attachment; filename="%s"' % basename(f)
                 msg.attach(part)
 
-        # Credentials (if needed)
+        # Credentials (if needed) : EDIT THIS
         username = "gmail_username"
         password = "password"
+
         # The actual mail send
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
