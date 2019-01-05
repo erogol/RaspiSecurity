@@ -1,6 +1,6 @@
 # RaspiSecurity
 Home Surveillance with Raspberry with only ~100 lines of Python Code.
-For technical details check the realted [medium post](https://hackernoon.com/raspberrypi-home-surveillance-with-only-150-lines-of-python-code-2701bd0373c9). Hope you like it.
+For technical details check the [medium post](https://hackernoon.com/raspberrypi-home-surveillance-with-only-150-lines-of-python-code-2701bd0373c9). Hope you like it.
 
 # Installation to a new Raspberry2 B+
 
